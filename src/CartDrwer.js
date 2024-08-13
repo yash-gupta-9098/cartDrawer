@@ -13,7 +13,7 @@ const CartDrwer = () => {
         }
         const cartData = await response.json();
         setCart(cartData);
-        // console.log(cartData);
+        
       } catch (error) {
         console.error('Error fetching cart data:', error);
       }
