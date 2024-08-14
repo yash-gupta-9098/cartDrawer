@@ -50,7 +50,7 @@ const wsThmVrsnVal  = "2.0"
     // Fetch cart data if store address and theme version are available
     // if (storeAddress && wsThmVrsnVal) {
       fetchCartData(storeAddress, wsThmVrsnVal);
-    // }
+    // } 
   }, []);
 
 
