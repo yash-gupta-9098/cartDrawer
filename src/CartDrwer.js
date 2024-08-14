@@ -21,9 +21,6 @@ const CartDrwer = () => {
       try {
         const response = await fetch('https://wiser.expertvillagemedia.com/cart_drawer_admin/getCartData?shop=yash-demo-store-evm.myshopify.com', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
           body: formdata
         });
 
