@@ -5,7 +5,7 @@ const CartDrwer = () => {
   const themeVersionRef = useRef(null);
   const $wsCdBaseUrl   = "https://wiser.expertvillagemedia.com/";
   const [themeVersion, setThemeVersion] = useState(null);
-  const [newstoreAddress , setNewStoreAddress ] = useState(Shopify.shop)
+
   useEffect(() => {
     if (themeVersionRef.current) {
       setThemeVersion(themeVersionRef.current.getAttribute('ws-theme-version'));
