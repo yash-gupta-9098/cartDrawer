@@ -24,7 +24,7 @@ const wsThmVrsnVal  = "2.0"
   useEffect(()=>{
     const fetchCartData = async (storeAddress, wsThmVrsnVal) => {
       try {
-        const response = await fetch('https://wiser.expertvillagemedia.com/cart_drawer_admin/getCartData', {
+        const response = await fetch('https://wiser.expertvillagemedia.com/cart_drawer_admin/getCartData?shop=a8028b-5d.myshopify.com', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
