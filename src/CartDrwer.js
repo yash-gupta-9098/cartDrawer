@@ -24,9 +24,10 @@ const CartDrwer = () => {
           body: formdata
         });
 
-          console.log( response  ,  "response from cart settings ")
+          
         if (response.ok) {
           const data = await response.json();
+          console.log(data , "data response");
           
         } else {
           console.error('Failed to fetch cart data');
