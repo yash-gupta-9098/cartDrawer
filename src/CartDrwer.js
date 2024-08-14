@@ -12,12 +12,14 @@ const CartDrwer = () => {
     }
   }, [themeVersionRef]);   
 
-  console.log(themeVersion , "themeVersion")
-  console.log(storeAddress , "storeAddress")
+
 
 const storeAddress = "a8028b-5d.myshopify.com"
 const wsThmVrsnVal  = "2.0"
   
+
+
+
  const  $wsDsblAnthrCd = "#sidebar-cart, cart-notification, #monster-upsell-cart, cart-drawer, .section-cart-drawer, #modalAddToCartProduct, #modalAddToCartError, .cart__drawer, .tt-dropdown-menu, #halo-cart-sidebar, .drawer--cart, #Cart-Drawer, #cart-drawer, #CartDrawer, .quick-cart, .mfp-draw, #mini-cart, .site-header__drawers, .mini-cart, .js-slideout-overlay, .site-overlay, aside#cart, [data-atc-banner], #slideout-ajax-cart, .cart-preview, [data-section-type='availability-drawer'], #cart-dropdown, .cart-drawer, #kaktusc-app, #kaktusc-widget, #rebuy-cart, #added-to-cart, [class*='side-cart-position']";
   useEffect(()=>{
     const fetchCartData = async (storeAddress, wsThmVrsnVal) => {
