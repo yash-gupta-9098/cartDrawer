@@ -14,7 +14,7 @@ const CartDrwer = () => {
 
 
 
-const storeAddress = "a8028b-5d.myshopify.com"
+const storeAddress = "yash-demo-store-evm.myshopify.com"
 const wsThmVrsnVal  = "2.0"
   
 
