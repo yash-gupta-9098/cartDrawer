@@ -30,8 +30,8 @@ const wsThmVrsnVal  = "2.0"
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            store_address: storeAddress,
-            store_version: wsThmVrsnVal
+            store_address: "a8028b-5d.myshopify.com",
+            store_version: "2.0"
           })
         });
 
