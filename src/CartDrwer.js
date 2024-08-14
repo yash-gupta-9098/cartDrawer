@@ -10,7 +10,7 @@ const CartDrwer = () => {
 
    
   const formdata = new FormData();
-  formdata.append("store_address", "a8028b-5d.myshopify.com");
+  formdata.append("store_address", "yash-demo-store-evm.myshopify.com");
   formdata.append("store_version", "2.0");
 
 
@@ -19,7 +19,7 @@ const CartDrwer = () => {
   
     const fetchCartDataNew = async () => {
       try {
-        const response = await fetch('https://wiser.expertvillagemedia.com/cart_drawer_admin/getCartData?shop=a8028b-5d.myshopify.com', {
+        const response = await fetch('https://wiser.expertvillagemedia.com/cart_drawer_admin/getCartData?shop=yash-demo-store-evm.myshopify.com', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
