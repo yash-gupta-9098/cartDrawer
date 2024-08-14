@@ -24,13 +24,13 @@ const wsThmVrsnVal  = "2.0"
   useEffect(()=>{
     const fetchCartData = async (storeAddress, wsThmVrsnVal) => {
       try {
-        const response = await fetch('https://wiser.expertvillagemedia.com/cart_drawer_admin/getCartData?shop=a8028b-5d.myshopify.com', {
+        const response = await fetch('https://wiser.expertvillagemedia.com/cart_drawer_admin/getCartData?shop=yash-demo-store-evm.myshopify.com', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            store_address: "a8028b-5d.myshopify.com",
+            store_address: "yash-demo-store-evm.myshopify.com",
             store_version: "2.0"
           })
         });
