@@ -14,15 +14,16 @@ const CartDrwer = () => {
 
 
 
-const storeAddress = "yash-demo-store-evm.myshopify.com"
-const wsThmVrsnVal  = "2.0"
+
   
 
 
 
  const  $wsDsblAnthrCd = "#sidebar-cart, cart-notification, #monster-upsell-cart, cart-drawer, .section-cart-drawer, #modalAddToCartProduct, #modalAddToCartError, .cart__drawer, .tt-dropdown-menu, #halo-cart-sidebar, .drawer--cart, #Cart-Drawer, #cart-drawer, #CartDrawer, .quick-cart, .mfp-draw, #mini-cart, .site-header__drawers, .mini-cart, .js-slideout-overlay, .site-overlay, aside#cart, [data-atc-banner], #slideout-ajax-cart, .cart-preview, [data-section-type='availability-drawer'], #cart-dropdown, .cart-drawer, #kaktusc-app, #kaktusc-widget, #rebuy-cart, #added-to-cart, [class*='side-cart-position']";
   useEffect(()=>{
-    const fetchCartData = async (storeAddress, wsThmVrsnVal) => {
+    const storeAddress = "yash-demo-store-evm.myshopify.com"
+const wsThmVrsnVal  = "2.0"
+    const fetchCartDataNew = async (storeAddress, wsThmVrsnVal) => {
       try {
         const response = await fetch('https://wiser.expertvillagemedia.com/cart_drawer_admin/getCartData?shop=yash-demo-store-evm.myshopify.com', {
           method: 'POST',
@@ -49,7 +50,7 @@ const wsThmVrsnVal  = "2.0"
 
     // Fetch cart data if store address and theme version are available
     // if (storeAddress && wsThmVrsnVal) {
-      fetchCartData(storeAddress, wsThmVrsnVal);
+      fetchCartDataNew(storeAddress, wsThmVrsnVal);
     // } 
   }, []);
 
