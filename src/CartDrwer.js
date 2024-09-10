@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect , useRef  } from 'react';
 
 const CartDrwer = () => {
   const [cart, setCart] = useState(null);
   const [cartsett, setCartSett] = useState(null);
- 
+  const prevCartItemsRef = useRef([]);
 
 
 
@@ -66,6 +66,9 @@ const CartDrwer = () => {
     // Fetch initial cart data
     fetchCartData();
 
+    if (cart?.items) {
+      prevCartItemsRef.current = cart.items;
+    }
     // Set up a polling interval to fetch cart data every 5 seconds
     // const intervalId = setInterval(fetchCartData, 5000);
 
@@ -73,6 +76,27 @@ const CartDrwer = () => {
     // return () => clearInterval(intervalId);
   }, [cart?.items]);
 
+
+  useEffect(() => {
+    if (cart?.items) {
+      const prevCartItems = prevCartItemsRef.current;
+
+      // Compare previous and current cart items
+      const itemsHaveChanged = JSON.stringify(prevCartItems) !== JSON.stringify(cart.items);
+
+      if (itemsHaveChanged) {
+        console.log("Cart items have changed. Fetching updated data...");
+        // Fetch the cart data again if the items have changed
+        fetch('/cart.js')
+          .then(response => response.json())
+          .then(data => setCart(data))
+          .catch(error => console.error('Error fetching updated cart data:', error));
+
+        // Update the previous cart items reference
+        prevCartItemsRef.current = cart.items;
+      }
+    }
+  }, [cart?.items]);
 
   console.log(cartsett , "cartsett")
   console.log(cart , "cart")
