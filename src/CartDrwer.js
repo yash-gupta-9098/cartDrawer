@@ -2,37 +2,13 @@ import React, { useState, useEffect } from 'react';
 
 const CartDrawer = () => {
   const [cart, setCart] = useState(null);
-  const [cartsett, setCartSett] = useState(null);
 
-  const formdata = new FormData();
-  formdata.append("store_address", "yash-demo-store-evm.myshopify.com");
-  formdata.append("store_version", "2.0");
-
-  // Fetch external cart data
-  const fetchCartDataNew = async () => {
-    try {
-      const response = await fetch('https://wiser.expertvillagemedia.com/cart_drawer_admin/getCartData?shop=yash-demo-store-evm.myshopify.com', {
-        method: 'POST',
-        body: formdata
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setCartSett(data);
-      } else {
-        console.error('Failed to fetch external cart data');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
-
-  // Fetch local cart data (Shopify's cart.js)
+  // Function to fetch cart data using Shopify's cart.js
   const fetchCartData = async () => {
     try {
       const response = await fetch('/cart.js');
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error('Failed to fetch cart data');
       }
       const cartData = await response.json();
       setCart(cartData);
@@ -41,30 +17,36 @@ const CartDrawer = () => {
     }
   };
 
-  useEffect(() => {
-    // Initial fetch for cart data from both sources
-    fetchCartData();
-    fetchCartDataNew();
+  // Intercept Shopify AJAX API calls for adding, updating, or removing items
+  const interceptCartActions = () => {
+    // Intercept /add.js API call
+    const originalAddToCart = window.fetch;
+    window.fetch = async function(url, options) {
+      const response = await originalAddToCart(url, options);
 
-    // Set up a listener to detect cart updates
-    document.addEventListener('cart:updated', fetchCartData);
-
-    // Clean up event listener on unmount
-    return () => {
-      document.removeEventListener('cart:updated', fetchCartData);
+      if (url.includes('/add.js') || url.includes('/update.js') || url.includes('/remove.js')) {
+        if (response.ok) {
+          console.log(`${url} API call was successful`);
+          // Fetch cart data after a successful add/update/remove API call
+          fetchCartData();
+        }
+      }
+      return response;
     };
-  }, []);
-
-  // Example of dispatching the custom event after cart changes
-  const simulateCartUpdate = () => {
-    // This is an example of simulating a cart update
-    const event = new Event('cart:updated');
-    document.dispatchEvent(event);
   };
+
+  useEffect(() => {
+    // Call the intercept function to start monitoring Shopify API calls
+    interceptCartActions();
+
+    // Initial fetch of the cart data when the component mounts
+    fetchCartData();
+
+  }, []);
 
   return (
     <div>
-      {/* Render your cart data here */}
+      {/* Render the cart data */}
       {cart && (
         <ul>
           {cart.items.map(item => (
@@ -72,7 +54,6 @@ const CartDrawer = () => {
           ))}
         </ul>
       )}
-      <button onClick={simulateCartUpdate}>Simulate Cart Update</button>
     </div>
   );
 };
