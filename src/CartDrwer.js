@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 const CartDrawer = () => {
   const [cart, setCart] = useState(null);
-  const overlayRef = useRef(null);
+  // const overlayRef = useRef(null);
   // Function to fetch cart data using Shopify's cart.js
 
   const cartClose = (evm_DrawerWrapper) =>{
@@ -62,7 +62,7 @@ console.log(url , "url");
 
   return (
     <div id='evm-cart-drawer'>  
-        <div id="evmcartdrawer-Overlay" class="evm-cart-drawer__overlay" ref={overlayRef} onClick={(evm_DrawerWrapper)=> cartClose(evm_DrawerWrapper)}></div>   
+        <div id="evmcartdrawer-Overlay" class="evm-cart-drawer__overlay" onClick={(evm_DrawerWrapper)=> cartClose(evm_DrawerWrapper)}></div>   
         <div className="evm-cart-inner">
           {cart && (
             <ul>
