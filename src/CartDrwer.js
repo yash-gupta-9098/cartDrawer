@@ -11,7 +11,7 @@ const CartDrawer = () => {
         throw new Error('Failed to fetch cart data');
       }
       const cartData = await response.json();
-      console.log(cartData, "cartData");
+      console.log(cartData , "cartData");
       setCart(cartData);
     } catch (error) {
       console.error('Error fetching cart data:', error);
@@ -20,52 +20,29 @@ const CartDrawer = () => {
 
   // Intercept Shopify AJAX API calls for adding, updating, or removing items
   const interceptCartActions = () => {
-    // Intercept window.fetch API
-    const originalFetch = window.fetch;
+    // Intercept /add.js API call
+    const originalAddToCart = window.fetch;
     window.fetch = async function(url, options) {
-      const response = await originalFetch(url, options);
-
-      // Check if the API call is for Shopify's cart actions
-      console.log(url , "url");
-      if (
-        url.includes('cart/add.js') ||
-        url.includes('cart/update.js') ||
-        url.includes('cart/change.js') ||
-        url.includes('cart/clear.js')
-      ) {
+      const response = await originalAddToCart(url, options);
+console.log(url , "url");
+      if (url.includes('cart/add') || url.includes('cart/update.js') || url.includes('cart/change') || url.includes('cart/clear') ) {
         console.log(`${url} API call was successful`);
         if (response.ok) {
-          fetchCartData(); // Fetch cart data after a successful cart-related API call
+          console.log(`${url} API call was successful`);
+          // Fetch cart data after a successful add/update/remove API call
+          fetchCartData();
         }
       }
-
       return response;
-    };
-
-    // Optional: Also intercept XMLHttpRequest if Shopify uses it instead of fetch
-    const originalXHR = window.XMLHttpRequest.prototype.open;
-    window.XMLHttpRequest.prototype.open = function(method, url) {
-      this.addEventListener('load', function() {
-        if (
-          url.includes('cart/add.js') ||
-          url.includes('cart/update.js') ||
-          url.includes('cart/change.js') ||
-          url.includes('cart/clear.js')
-        ) {
-          console.log(`${url} API call was successful via XMLHttpRequest`);
-          fetchCartData(); // Fetch cart data after a successful cart-related API call
-        }
-      });
-      return originalXHR.apply(this, arguments);
     };
   };
 
   useEffect(() => {
-    // Intercept cart actions when the component mounts
+    // Call the intercept function to start monitoring Shopify API calls
     interceptCartActions();
-
-    // Fetch the initial cart data when the component mounts
+    // Initial fetch of the cart data when the component mounts
     fetchCartData();
+
   }, []);
 
   return (
