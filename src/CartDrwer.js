@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 
 const CartDrwer = () => {
   const [cart, setCart] = useState(null);
-  const [cartSett, setCartSett] = useState(null);
   const prevCartItemsRef = useRef([]);
 
   const formdata = new FormData();
@@ -20,7 +19,6 @@ const CartDrwer = () => {
         if (response.ok) {
           const data = await response.json();
           console.log(data, "data response");
-          setCartSett(data);
         } else {
           console.error('Failed to fetch cart data');
         }
@@ -33,59 +31,42 @@ const CartDrwer = () => {
     fetchCartDataNew();
   }, []);
 
-  useEffect(() => {
-    // Function to fetch the cart data
-    const fetchCartData = async () => {
-      try {
-        const response = await fetch('/cart.js');
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const cartData = await response.json();
-        setCart(cartData);
-      } catch (error) {
-        console.error('Error fetching cart data:', error);
+  const fetchCartData = async () => {
+    try {
+      const response = await fetch('/cart.js');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
       }
-    };
-
-    // Fetch initial cart data
-    fetchCartData();
-
-    // Update previous cart items reference when the cart changes
-    if (cart?.items) {
-      prevCartItemsRef.current = cart.items;
+      const cartData = await response.json();
+      // Only set the cart if it's actually different
+      if (JSON.stringify(cartData.items) !== JSON.stringify(prevCartItemsRef.current)) {
+        setCart(cartData);
+        prevCartItemsRef.current = cartData.items; // Update ref with new items
+      }
+    } catch (error) {
+      console.error('Error fetching cart data:', error);
     }
+  };
 
-    // Poll for cart changes every 5 seconds (optional)
-    // const intervalId = setInterval(fetchCartData, 5000);
+  // Fetch initial cart data on mount
+  useEffect(() => {
+    fetchCartData();
+  }, []);
 
-    // Cleanup interval on component unmount
-    // return () => clearInterval(intervalId);
-  }, [cart?.items]);
-
-  // Check if the cart items have changed
+  // Listen for changes in cart items and refetch only when there are real changes
   useEffect(() => {
     if (cart?.items) {
       const prevCartItems = prevCartItemsRef.current;
 
-      // Compare previous and current cart items
       const itemsHaveChanged = JSON.stringify(prevCartItems) !== JSON.stringify(cart.items);
 
       if (itemsHaveChanged) {
         console.log("Cart items have changed. Fetching updated data...");
-        // Fetch the cart data again if the items have changed
-        fetch('/cart.js')
-          .then(response => response.json())
-          .then(data => setCart(data))
-          .catch(error => console.error('Error fetching updated cart data:', error));
-
-        // Update the previous cart items reference
-        prevCartItemsRef.current = cart.items;
+        fetchCartData(); // Only fetch if items have changed
       }
     }
-  }, [cart?.items]);
+  }, [cart]);
 
-  console.log(cartSett, "cartSett");
   console.log(cart, "cart");
 
   return (
