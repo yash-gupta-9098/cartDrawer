@@ -1,23 +1,15 @@
-import React, { useState, useEffect , useRef  } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 const CartDrwer = () => {
   const [cart, setCart] = useState(null);
-  const [cartsett, setCartSett] = useState(null);
+  const [cartSett, setCartSett] = useState(null);
   const prevCartItemsRef = useRef([]);
 
-
-
-
-
-   
   const formdata = new FormData();
   formdata.append("store_address", "yash-demo-store-evm.myshopify.com");
   formdata.append("store_version", "2.0");
 
-
-//  const  $wsDsblAnthrCd = "#sidebar-cart, cart-notification, #monster-upsell-cart, cart-drawer, .section-cart-drawer, #modalAddToCartProduct, #modalAddToCartError, .cart__drawer, .tt-dropdown-menu, #halo-cart-sidebar, .drawer--cart, #Cart-Drawer, #cart-drawer, #CartDrawer, .quick-cart, .mfp-draw, #mini-cart, .site-header__drawers, .mini-cart, .js-slideout-overlay, .site-overlay, aside#cart, [data-atc-banner], #slideout-ajax-cart, .cart-preview, [data-section-type='availability-drawer'], #cart-dropdown, .cart-drawer, #kaktusc-app, #kaktusc-widget, #rebuy-cart, #added-to-cart, [class*='side-cart-position']";
-  useEffect(()=>{
-  
+  useEffect(() => {
     const fetchCartDataNew = async () => {
       try {
         const response = await fetch('https://wiser.expertvillagemedia.com/cart_drawer_admin/getCartData?shop=yash-demo-store-evm.myshopify.com', {
@@ -25,12 +17,10 @@ const CartDrwer = () => {
           body: formdata
         });
 
-          
         if (response.ok) {
           const data = await response.json();
-          console.log(data , "data response");
+          console.log(data, "data response");
           setCartSett(data);
-          
         } else {
           console.error('Failed to fetch cart data');
         }
@@ -39,13 +29,9 @@ const CartDrwer = () => {
       }
     };
 
-    // Fetch cart data if store address and theme version are available
-    // if (storeAddress && wsThmVrsnVal) {
-      fetchCartDataNew();
-    // } 
+    // Fetch cart data when the component mounts
+    fetchCartDataNew();
   }, []);
-
-
 
   useEffect(() => {
     // Function to fetch the cart data
@@ -57,26 +43,27 @@ const CartDrwer = () => {
         }
         const cartData = await response.json();
         setCart(cartData);
-        
       } catch (error) {
-        console.error('Error fetching cart data:', error); 
+        console.error('Error fetching cart data:', error);
       }
     };
 
     // Fetch initial cart data
     fetchCartData();
 
+    // Update previous cart items reference when the cart changes
     if (cart?.items) {
       prevCartItemsRef.current = cart.items;
     }
-    // Set up a polling interval to fetch cart data every 5 seconds
+
+    // Poll for cart changes every 5 seconds (optional)
     // const intervalId = setInterval(fetchCartData, 5000);
 
     // Cleanup interval on component unmount
     // return () => clearInterval(intervalId);
   }, [cart?.items]);
 
-
+  // Check if the cart items have changed
   useEffect(() => {
     if (cart?.items) {
       const prevCartItems = prevCartItemsRef.current;
@@ -98,8 +85,8 @@ const CartDrwer = () => {
     }
   }, [cart?.items]);
 
-  console.log(cartsett , "cartsett")
-  console.log(cart , "cart")
+  console.log(cartSett, "cartSett");
+  console.log(cart, "cart");
 
   return (
     <div>
@@ -116,4 +103,3 @@ const CartDrwer = () => {
 };
 
 export default CartDrwer;
- 
