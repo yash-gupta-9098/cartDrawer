@@ -26,7 +26,7 @@ const CartDrawer = () => {
       setCart(cartData);
     } catch (error) {
       console.error('Error fetching cart data:', error);
-    }
+    } 
   };
 
 
