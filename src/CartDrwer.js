@@ -67,16 +67,8 @@ const CartDrawer = () => {
   }, []);
 
   return (
-    <div id='evm-cart-drawer'>
-      <div
-        id="evmcartdrawer"
-        className="evm-cart-drawer__wrapper"
-      >
-        <div
-          id="evmcartdrawer-Overlay"
-          className="evm-cart-drawer__overlay"
-          onClick={cartClose}
-        ></div>
+    <div id='evm-cart-drawer'>     
+        <div id="evmcartdrawer-Overlay" className="evm-cart-drawer__overlay"onClick={cartClose}></div>
         <div className="evm-cart-inner">
           {cart && (
             <ul>
@@ -86,7 +78,7 @@ const CartDrawer = () => {
             </ul>
           )}
         </div>
-      </div>
+     
     </div>
   );
 };
