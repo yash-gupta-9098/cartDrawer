@@ -89,27 +89,31 @@ const debounce = (func, delay) => {
   };
 }; 
 
+
+
+const wsDrawerActive  = () =>{
+  console.log("darwer active")
+  const evm_DrawerWrapper = document.querySelector("#evmcartdrawer");          
+  const webbody = document.querySelector("body");
+  if (evm_DrawerWrapper) {
+    if (!evm_DrawerWrapper.classList.contains('active')) {
+      // Add the 'active' class if not already present
+      evm_DrawerWrapper.classList.add('active');
+      webbody.classList.add('ws_bodyactive');
+      // disabled default drawer 
+      wsDsblAnthrCd();
+    } else {
+      console.log('The drawer already has the "active" class');
+    }
+  }
+
+}
+
 const debouncedWsDrawerActive = debounce(wsDrawerActive, 300); 
 
 
 
-  const wsDrawerActive  = () =>{
-    console.log("darwer active")
-    const evm_DrawerWrapper = document.querySelector("#evmcartdrawer");          
-    const webbody = document.querySelector("body");
-    if (evm_DrawerWrapper) {
-      if (!evm_DrawerWrapper.classList.contains('active')) {
-        // Add the 'active' class if not already present
-        evm_DrawerWrapper.classList.add('active');
-        webbody.classList.add('ws_bodyactive');
-        // disabled default drawer 
-        wsDsblAnthrCd();
-      } else {
-        console.log('The drawer already has the "active" class');
-      }
-    }
-
-  }
+  
 
 
   
