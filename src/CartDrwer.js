@@ -12,6 +12,7 @@ const CartDrawer = () => {
       }
       const cartData = await response.json();
       console.log(cartData , "cartData");
+      
       setCart(cartData);
     } catch (error) {
       console.error('Error fetching cart data:', error);
@@ -27,6 +28,12 @@ const CartDrawer = () => {
 console.log(url , "url");
       if (url.includes('cart/add') || url.includes('cart/update.js') || url.includes('cart/change') || url.includes('cart/clear') ) {        
         if (response.ok) {
+          if (!evm_DrawerWrapper.classList.contains('active')) {
+            // If it doesn't, add the 'active' class
+            evm_DrawerWrapper.classList.add('active');
+          } else {
+            console.log('The drawer already has the "active" class');
+          }          
           console.log(`${url} API call was successful`);
           // Fetch cart data after a successful add/update/remove API call
           fetchCartData();
@@ -38,6 +45,7 @@ console.log(url , "url");
   };
 
   useEffect(() => {
+    const evm_DrawerWrapper = document.querySelector("#evmcartdrawer"); 
     // Call the intercept function to start monitoring Shopify API calls
     interceptCartActions();
     // Initial fetch of the cart data when the component mounts

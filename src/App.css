@@ -25,3 +25,18 @@ div#evmcartdrawer.active {
   transform: translate(100%);
   transition: transform var(--duration-default) ease;
 }
+div#evmcartdrawer-Overlay{
+  display: block!important;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0; 
+  z-index: -1;
+} 
+
+div#evmcartdrawer.active .evm-cart-inner {
+  transform: translate(0%);
+}
+
+
