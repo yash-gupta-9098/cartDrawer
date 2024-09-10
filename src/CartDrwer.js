@@ -6,8 +6,10 @@ const CartDrawer = () => {
   // Function to close the cart drawer
   const cartClose = () => {
     const evm_DrawerWrapper = document.querySelector("#evmcartdrawer");
+    const webbody = document.querySelector("body");
     if (evm_DrawerWrapper) {
       evm_DrawerWrapper.classList.remove('active');
+      webbody.classList.remove('ws_bodyactive');
     }
   };
 
@@ -38,10 +40,12 @@ const CartDrawer = () => {
       if (url.includes('cart/add') || url.includes('cart/update.js') || url.includes('cart/change') || url.includes('cart/clear')) {
         if (response.ok) {
           const evm_DrawerWrapper = document.querySelector("#evmcartdrawer");
+          const webbody = document.querySelector("body");
           if (evm_DrawerWrapper) {
             if (!evm_DrawerWrapper.classList.contains('active')) {
               // Add the 'active' class if not already present
               evm_DrawerWrapper.classList.add('active');
+              webbody.classList.add('ws_bodyactive');
             } else {
               console.log('The drawer already has the "active" class');
             }
