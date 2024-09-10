@@ -1,93 +1,66 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const CartDrwer = () => {
+const CartDrawer = () => {
   const [cart, setCart] = useState(null);
-  const [cartSett, setCartSett] = useState(null);
-  const [loopOn , setLoopOn] = useState(false);
-  const prevCartItemsRef = useRef([]);
+  const [cartsett, setCartSett] = useState(null);
 
   const formdata = new FormData();
   formdata.append("store_address", "yash-demo-store-evm.myshopify.com");
   formdata.append("store_version", "2.0");
 
-  useEffect(() => {
-    const fetchCartDataNew = async () => {
-      try {
-        const response = await fetch('https://wiser.expertvillagemedia.com/cart_drawer_admin/getCartData?shop=yash-demo-store-evm.myshopify.com', {
-          method: 'POST',
-          body: formdata
-        });
+  // Fetch external cart data
+  const fetchCartDataNew = async () => {
+    try {
+      const response = await fetch('https://wiser.expertvillagemedia.com/cart_drawer_admin/getCartData?shop=yash-demo-store-evm.myshopify.com', {
+        method: 'POST',
+        body: formdata
+      });
 
-        if (response.ok) {
-          const data = await response.json();
-          console.log(data, "data response");
-          setCartSett(data);
-        } else {
-          console.error('Failed to fetch cart data');
-        }
-      } catch (error) {
-        console.error('Error:', error);
+      if (response.ok) {
+        const data = await response.json();
+        setCartSett(data);
+      } else {
+        console.error('Failed to fetch external cart data');
       }
-    };
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
-    // Fetch cart data when the component mounts
+  // Fetch local cart data (Shopify's cart.js)
+  const fetchCartData = async () => {
+    try {
+      const response = await fetch('/cart.js');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const cartData = await response.json();
+      setCart(cartData);
+    } catch (error) {
+      console.error('Error fetching cart data:', error);
+    }
+  };
+
+  useEffect(() => {
+    // Initial fetch for cart data from both sources
+    fetchCartData();
     fetchCartDataNew();
+
+    // Set up a listener to detect cart updates
+    document.addEventListener('cart:updated', fetchCartData);
+
+    // Clean up event listener on unmount
+    return () => {
+      document.removeEventListener('cart:updated', fetchCartData);
+    };
   }, []);
 
-  useEffect(() => {
-    // Function to fetch the cart data
-    const fetchCartData = async () => {
-      try {
-        const response = await fetch('/cart.js');
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const cartData = await response.json();
-        setCart(cartData);
-      } catch (error) {
-        console.error('Error fetching cart data:', error);
-      }
-    };
-
-    // Fetch initial cart data
-    fetchCartData();
-
-    // Update previous cart items reference when the cart changes
-    if (cart?.items) {
-      prevCartItemsRef.current = cart.items;
-    }
-
-    // Poll for cart changes every 5 seconds (optional)
-    // const intervalId = setInterval(fetchCartData, 5000);
-
-    // Cleanup interval on component unmount
-    // return () => clearInterval(intervalId);
-  }, [loopOn]);
-
-  // Check if the cart items have changed
-  // useEffect(() => {
-  //   if (cart?.items) {
-  //     const prevCartItems = prevCartItemsRef.current;
-
-  //     // Compare previous and current cart items
-  //     const itemsHaveChanged = JSON.stringify(prevCartItems) !== JSON.stringify(cart.items);
-
-  //     if (itemsHaveChanged) {
-  //       console.log("Cart items have changed. Fetching updated data...");
-  //       // Fetch the cart data again if the items have changed
-  //       fetch('/cart.js')
-  //         .then(response => response.json())
-  //         .then(data => setCart(data))
-  //         .catch(error => console.error('Error fetching updated cart data:', error));
-
-  //       // Update the previous cart items reference
-  //       prevCartItemsRef.current = cart.items;
-  //     }
-  //   }
-  // }, [cart?.items]);
-
-  console.log(cartSett, "cartSett");
-  console.log(cart, "cart");
+  // Example of dispatching the custom event after cart changes
+  const simulateCartUpdate = () => {
+    // This is an example of simulating a cart update
+    const event = new Event('cart:updated');
+    document.dispatchEvent(event);
+  };
 
   return (
     <div>
@@ -99,8 +72,9 @@ const CartDrwer = () => {
           ))}
         </ul>
       )}
+      <button onClick={simulateCartUpdate}>Simulate Cart Update</button>
     </div>
   );
 };
 
-export default CartDrwer;
+export default CartDrawer;
