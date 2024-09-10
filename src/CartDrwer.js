@@ -29,9 +29,6 @@ const CartDrawer = () => {
     }
   };
 
-
-  const debouncefetchCartData = debounce(fetchCartData, 300);  
-
   // Intercept Shopify AJAX API calls for adding, updating, or removing items
   const interceptCartActions = () => {
     // Intercept fetch calls
@@ -43,11 +40,10 @@ const CartDrawer = () => {
 
       if (url.includes('cart/add') || url.includes('cart/update.js') || url.includes('cart/change') || url.includes('cart/clear')) {
         if (response.ok) {
-          debouncedWsDrawerActive();        
+          debouncedWsDrawerActive()        
           console.log(`${url} API call was successful`);
-          debouncefetchCartData();
           // Fetch cart data after a successful add/update/remove API call
-          
+          fetchCartData();
         }
       }
       return response;
