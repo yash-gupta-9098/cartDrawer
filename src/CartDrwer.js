@@ -76,9 +76,23 @@ const CartDrawer = () => {
 };
 
 
-// disable Default Cart Drawer 
+
+
+
+const debounce = (func, delay) => {
+  let timeoutId;
+  return (...args) => {
+    if (timeoutId) clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      func(...args);
+    }, delay);
+  };
+}; 
 
 const debouncedWsDrawerActive = debounce(wsDrawerActive, 300); 
+
+
+
   const wsDrawerActive  = () =>{
     console.log("darwer active")
     const evm_DrawerWrapper = document.querySelector("#evmcartdrawer");          
