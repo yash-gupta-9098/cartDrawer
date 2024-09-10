@@ -17,7 +17,7 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Hello from wiser 
+          Hello from wiser new 
         </a>
 
       </header>
