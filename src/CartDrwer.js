@@ -35,7 +35,7 @@ const CartDrawer = () => {
   // Intercept Shopify AJAX API calls for adding, updating, or removing items
   const interceptCartActions = () => { 
     // Intercept fetch calls
-    const originalFetch = window.fetch;
+    const originalFetch = window.fetch; 
     window.fetch = async function(url, options) {
       const response = await originalFetch(url, options);
 
