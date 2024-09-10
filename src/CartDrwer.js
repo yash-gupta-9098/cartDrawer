@@ -26,6 +26,7 @@ const CartDrawer = () => {
       const response = await originalFetch(url, options);
 
       // Check if the API call is for Shopify's cart actions
+      console.log(url , "url");
       if (
         url.includes('cart/add.js') ||
         url.includes('cart/update.js') ||
