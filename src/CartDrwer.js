@@ -46,7 +46,8 @@ console.log(url , "url");
   }, []);
 
   return (
-    <div id='evm-cart-drawer'>     
+    <div id='evm-cart-drawer'>  
+        <div id="evmcartdrawer-Overlay" class="evm-cart-drawer__overlay"></div>   
         <div className="evm-cart-inner">
           {cart && (
             <ul>
