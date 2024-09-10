@@ -11,6 +11,7 @@ const CartDrawer = () => {
         throw new Error('Failed to fetch cart data');
       }
       const cartData = await response.json();
+      console.log(cartData , "cartData");
       setCart(cartData);
     } catch (error) {
       console.error('Error fetching cart data:', error);
@@ -24,7 +25,7 @@ const CartDrawer = () => {
     window.fetch = async function(url, options) {
       const response = await originalAddToCart(url, options);
 
-      if (url.includes('/add.js') || url.includes('/update.js') || url.includes('/remove.js')) {
+      if (url.includes('/add.js') || url.includes('/update.js') || url.includes('/change.js')) {
         if (response.ok) {
           console.log(`${url} API call was successful`);
           // Fetch cart data after a successful add/update/remove API call
@@ -38,7 +39,6 @@ const CartDrawer = () => {
   useEffect(() => {
     // Call the intercept function to start monitoring Shopify API calls
     interceptCartActions();
-
     // Initial fetch of the cart data when the component mounts
     fetchCartData();
 
