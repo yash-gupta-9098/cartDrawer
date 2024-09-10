@@ -9,7 +9,7 @@ const CartDrawer = () => {
     const webbody = document.querySelector("body");
     if (evm_DrawerWrapper) {
       evm_DrawerWrapper.classList.remove('active');
-      webbody.classList.remove('ws_bodyactive');
+      webbody.classList.remove("js-drawer-open-right", "js-drawer-open", "ajax-cart__is-open", "js-drawer-open" , "ws_bodyactive");
     }
   };
 
@@ -39,13 +39,16 @@ const CartDrawer = () => {
 
       if (url.includes('cart/add') || url.includes('cart/update.js') || url.includes('cart/change') || url.includes('cart/clear')) {
         if (response.ok) {
-          const evm_DrawerWrapper = document.querySelector("#evmcartdrawer");
+          
+          const evm_DrawerWrapper = document.querySelector("#evmcartdrawer");          
           const webbody = document.querySelector("body");
           if (evm_DrawerWrapper) {
             if (!evm_DrawerWrapper.classList.contains('active')) {
               // Add the 'active' class if not already present
               evm_DrawerWrapper.classList.add('active');
               webbody.classList.add('ws_bodyactive');
+              // disabled default drawer 
+              wsDsblAnthrCd();
             } else {
               console.log('The drawer already has the "active" class');
             }
@@ -82,5 +85,26 @@ const CartDrawer = () => {
     </div>
   );
 };
+
+
+// disable Default Cart Drawer 
+
+
+
+
+const wsDsblAnthrCd = () => {
+    let $wsDsblAnthrCd    = "#sidebar-cart, cart-notification, #monster-upsell-cart, cart-drawer, .section-cart-drawer, #modalAddToCartProduct, #modalAddToCartError, .cart__drawer, .tt-dropdown-menu, #halo-cart-sidebar, .drawer--cart, #Cart-Drawer, #cart-drawer, #CartDrawer, .quick-cart, .mfp-draw, #mini-cart, .site-header__drawers, .mini-cart, .js-slideout-overlay, .site-overlay, aside#cart, [data-atc-banner], #slideout-ajax-cart, .cart-preview, [data-section-type='availability-drawer'], #cart-dropdown, .cart-drawer, #kaktusc-app, #kaktusc-widget, #rebuy-cart, #added-to-cart, [class*='side-cart-position']";  
+		document.body.classList.remove("js-drawer-open-right", "js-drawer-open", "ajax-cart__is-open", "js-drawer-open");
+		const $selectorsArray = $wsDsblAnthrCd.split(',').map(selector => selector.trim());
+		$selectorsArray.forEach(selector => {
+			const $wsElmts = document.querySelectorAll(selector);
+			$wsElmts.forEach($wsElmt => {
+			/*$wsElmt.remove();*/
+				$wsElmt.style.display = 'none';
+			});
+		});
+
+}
+
 
 export default CartDrawer;
