@@ -40,7 +40,7 @@ const CartDrawer = () => {
 
       if (url.includes('cart/add') || url.includes('cart/update.js') || url.includes('cart/change') || url.includes('cart/clear')) {
         if (response.ok) {
-          wsDrawerActive()          
+          debouncedWsDrawerActive()        
           console.log(`${url} API call was successful`);
           // Fetch cart data after a successful add/update/remove API call
           fetchCartData();
@@ -78,7 +78,7 @@ const CartDrawer = () => {
 
 // disable Default Cart Drawer 
 
-
+const debouncedWsDrawerActive = debounce(wsDrawerActive, 300); 
   const wsDrawerActive  = () =>{
     console.log("darwer active")
     const evm_DrawerWrapper = document.querySelector("#evmcartdrawer");          
