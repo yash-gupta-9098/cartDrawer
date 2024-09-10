@@ -25,12 +25,12 @@ const CartDrawer = () => {
     window.fetch = async function(url, options) {
       const response = await originalAddToCart(url, options);
 console.log(url , "url");
-      if (url.includes('cart/add') || url.includes('cart/update.js') || url.includes('cart/change') || url.includes('cart/clear') ) {
-        console.log(`${url} API call was successful`);
+      if (url.includes('cart/add') || url.includes('cart/update.js') || url.includes('cart/change') || url.includes('cart/clear') ) {        
         if (response.ok) {
           console.log(`${url} API call was successful`);
           // Fetch cart data after a successful add/update/remove API call
           fetchCartData();
+
         }
       }
       return response;
@@ -46,15 +46,16 @@ console.log(url , "url");
   }, []);
 
   return (
-    <div>
-      {/* Render the cart data */}
-      {cart && (
-        <ul>
-          {cart.items.map(item => (
-            <li key={item.id}>{item.title} - {item.quantity}</li>
-          ))}
-        </ul>
-      )}
+    <div id='evm-cart-drawer'>     
+        <div className="evm-cart-inner">
+          {cart && (
+            <ul>
+              {cart.items.map(item => (
+                <li key={item.id}>{item.title} - {item.quantity}</li>
+              ))}
+            </ul>
+          )}
+        </div>
     </div>
   );
 };

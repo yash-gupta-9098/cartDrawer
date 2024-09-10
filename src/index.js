@@ -12,7 +12,7 @@ root.render(
   </React.StrictMode>
 );
 
-const CartDRwerRoot = ReactDOM.createRoot(document.getElementById('cartdrawer'));
+const CartDRwerRoot = ReactDOM.createRoot(document.getElementById('evmcartdrawer'));
 CartDRwerRoot.render(
   <React.StrictMode>
     <CartDrwer />
