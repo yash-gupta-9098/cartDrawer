@@ -71,7 +71,7 @@ const CartDrwer = () => {
 
     // Cleanup interval on component unmount
     // return () => clearInterval(intervalId);
-  }, []);
+  }, [cart?.items]);
 
 
   console.log(cartsett , "cartsett")
