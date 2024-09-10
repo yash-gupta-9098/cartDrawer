@@ -20,11 +20,12 @@ const CartDrawer = () => {
 
   // Intercept Shopify AJAX API calls for adding, updating, or removing items
   const interceptCartActions = () => {
-    // Intercept /add.js API call
+    // Intercept window.fetch API
     const originalFetch = window.fetch;
     window.fetch = async function(url, options) {
       const response = await originalFetch(url, options);
 
+      // Check if the API call is for Shopify's cart actions
       if (
         url.includes('cart/add.js') ||
         url.includes('cart/update.js') ||
@@ -33,27 +34,37 @@ const CartDrawer = () => {
       ) {
         console.log(`${url} API call was successful`);
         if (response.ok) {
-          fetchCartData(); // Fetch cart data after a successful add/update/remove API call
+          fetchCartData(); // Fetch cart data after a successful cart-related API call
         }
       }
+
       return response;
+    };
+
+    // Optional: Also intercept XMLHttpRequest if Shopify uses it instead of fetch
+    const originalXHR = window.XMLHttpRequest.prototype.open;
+    window.XMLHttpRequest.prototype.open = function(method, url) {
+      this.addEventListener('load', function() {
+        if (
+          url.includes('cart/add.js') ||
+          url.includes('cart/update.js') ||
+          url.includes('cart/change.js') ||
+          url.includes('cart/clear.js')
+        ) {
+          console.log(`${url} API call was successful via XMLHttpRequest`);
+          fetchCartData(); // Fetch cart data after a successful cart-related API call
+        }
+      });
+      return originalXHR.apply(this, arguments);
     };
   };
 
   useEffect(() => {
-    // Call the intercept function to start monitoring Shopify API calls
+    // Intercept cart actions when the component mounts
     interceptCartActions();
 
-    // Listen for Shopify's cart:updated event
-    document.addEventListener('cart:updated', fetchCartData);
-
-    // Initial fetch of the cart data when the component mounts
+    // Fetch the initial cart data when the component mounts
     fetchCartData();
-
-    // Cleanup event listener on component unmount
-    return () => {
-      document.removeEventListener('cart:updated', fetchCartData);
-    };
   }, []);
 
   return (
