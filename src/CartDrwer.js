@@ -9,7 +9,7 @@ const CartDrawer = () => {
     const webbody = document.querySelector("body");
     if (evm_DrawerWrapper) {
       evm_DrawerWrapper.classList.remove('active');
-      webbody.classList.remove("js-drawer-open-right", "js-drawer-open", "ajax-cart__is-open", "js-drawer-open" , "ws_bodyactive");
+      webbody.classList.remove("js-drawer-open-right", "js-drawer-open", "ajax-cart__is-open", "js-drawer-open" , "ws_bodyactive" , "overflow-hidden");
     }
   };
 
@@ -94,7 +94,7 @@ const CartDrawer = () => {
 
 const wsDsblAnthrCd = () => {
     let $wsDsblAnthrCd    = "#sidebar-cart, cart-notification, #monster-upsell-cart, cart-drawer, .section-cart-drawer, #modalAddToCartProduct, #modalAddToCartError, .cart__drawer, .tt-dropdown-menu, #halo-cart-sidebar, .drawer--cart, #Cart-Drawer, #cart-drawer, #CartDrawer, .quick-cart, .mfp-draw, #mini-cart, .site-header__drawers, .mini-cart, .js-slideout-overlay, .site-overlay, aside#cart, [data-atc-banner], #slideout-ajax-cart, .cart-preview, [data-section-type='availability-drawer'], #cart-dropdown, .cart-drawer, #kaktusc-app, #kaktusc-widget, #rebuy-cart, #added-to-cart, [class*='side-cart-position']";  
-		document.body.classList.remove("js-drawer-open-right", "js-drawer-open", "ajax-cart__is-open", "js-drawer-open");
+		document.body.classList.remove("js-drawer-open-right", "js-drawer-open", "ajax-cart__is-open", "js-drawer-open" , "overflow-hidden");
 		const $selectorsArray = $wsDsblAnthrCd.split(',').map(selector => selector.trim());
 		$selectorsArray.forEach(selector => {
 			const $wsElmts = document.querySelectorAll(selector);
