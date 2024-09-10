@@ -5,6 +5,7 @@ const CartDrawer = () => {
 
   // Function to close the cart drawer
   const cartClose = () => {
+    console.log("cart close");
     const evm_DrawerWrapper = document.querySelector("#evmcartdrawer");
     const webbody = document.querySelector("body");
     if (evm_DrawerWrapper) {
@@ -39,20 +40,7 @@ const CartDrawer = () => {
 
       if (url.includes('cart/add') || url.includes('cart/update.js') || url.includes('cart/change') || url.includes('cart/clear')) {
         if (response.ok) {
-          
-          const evm_DrawerWrapper = document.querySelector("#evmcartdrawer");          
-          const webbody = document.querySelector("body");
-          if (evm_DrawerWrapper) {
-            if (!evm_DrawerWrapper.classList.contains('active')) {
-              // Add the 'active' class if not already present
-              evm_DrawerWrapper.classList.add('active');
-              webbody.classList.add('ws_bodyactive');
-              // disabled default drawer 
-              wsDsblAnthrCd();
-            } else {
-              console.log('The drawer already has the "active" class');
-            }
-          }
+          wsDrawerActive()          
           console.log(`${url} API call was successful`);
           // Fetch cart data after a successful add/update/remove API call
           fetchCartData();
@@ -65,6 +53,7 @@ const CartDrawer = () => {
   useEffect(() => {
     // Call the intercept function to start monitoring Shopify API calls
     interceptCartActions();
+    iconClickDrawerOpen();
     // Initial fetch of the cart data when the component mounts
     fetchCartData();
   }, []);
@@ -90,6 +79,37 @@ const CartDrawer = () => {
 // disable Default Cart Drawer 
 
 
+  const wsDrawerActive  = () =>{
+    console.log("darwer active")
+    const evm_DrawerWrapper = document.querySelector("#evmcartdrawer");          
+    const webbody = document.querySelector("body");
+    if (evm_DrawerWrapper) {
+      if (!evm_DrawerWrapper.classList.contains('active')) {
+        // Add the 'active' class if not already present
+        evm_DrawerWrapper.classList.add('active');
+        webbody.classList.add('ws_bodyactive');
+        // disabled default drawer 
+        wsDsblAnthrCd();
+      } else {
+        console.log('The drawer already has the "active" class');
+      }
+    }
+
+  }
+
+
+  
+	const iconClickDrawerOpen  = () => {
+    let $wsHdrSltr = 'body .wsCartOpen, body header .wsCartOpen, body header a[href="/'+$wsCartLocale+'/cart"], body header a[href="/cart"], body .header a[href="/cart"], body header a[href="/cart"] span, body header a[href="/cart"] svg';
+	const $wsCartLinks = document.querySelectorAll($wsHdrSltr);
+    $wsCartLinks.forEach(function($wsEle) {
+		$wsEle.addEventListener('click', function(event) {
+      console.log("iconclick")  
+      wsDrawerActive()
+
+    })
+  })
+}
 
 
 const wsDsblAnthrCd = () => {
