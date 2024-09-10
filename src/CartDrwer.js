@@ -100,7 +100,7 @@ const CartDrawer = () => {
 
   
 	const iconClickDrawerOpen  = () => {
-    let $wsHdrSltr = 'body .wsCartOpen, body header .wsCartOpen, body header a[href="/'+$wsCartLocale+'/cart"], body header a[href="/cart"], body .header a[href="/cart"], body header a[href="/cart"] span, body header a[href="/cart"] svg';
+    let $wsHdrSltr = 'body .wsCartOpen, body header .wsCartOpen, body header a[href="/cart"], body .header a[href="/cart"], body header a[href="/cart"] span, body header a[href="/cart"] svg';
 	const $wsCartLinks = document.querySelectorAll($wsHdrSltr);
     $wsCartLinks.forEach(function($wsEle) {
 		$wsEle.addEventListener('click', function(event) {
