@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const CartDrwer = () => {
   const [cart, setCart] = useState(null);
+  const [cartsett, setCartSett] = useState(null);
  
 
 
@@ -14,7 +15,7 @@ const CartDrwer = () => {
   formdata.append("store_version", "2.0");
 
 
- const  $wsDsblAnthrCd = "#sidebar-cart, cart-notification, #monster-upsell-cart, cart-drawer, .section-cart-drawer, #modalAddToCartProduct, #modalAddToCartError, .cart__drawer, .tt-dropdown-menu, #halo-cart-sidebar, .drawer--cart, #Cart-Drawer, #cart-drawer, #CartDrawer, .quick-cart, .mfp-draw, #mini-cart, .site-header__drawers, .mini-cart, .js-slideout-overlay, .site-overlay, aside#cart, [data-atc-banner], #slideout-ajax-cart, .cart-preview, [data-section-type='availability-drawer'], #cart-dropdown, .cart-drawer, #kaktusc-app, #kaktusc-widget, #rebuy-cart, #added-to-cart, [class*='side-cart-position']";
+//  const  $wsDsblAnthrCd = "#sidebar-cart, cart-notification, #monster-upsell-cart, cart-drawer, .section-cart-drawer, #modalAddToCartProduct, #modalAddToCartError, .cart__drawer, .tt-dropdown-menu, #halo-cart-sidebar, .drawer--cart, #Cart-Drawer, #cart-drawer, #CartDrawer, .quick-cart, .mfp-draw, #mini-cart, .site-header__drawers, .mini-cart, .js-slideout-overlay, .site-overlay, aside#cart, [data-atc-banner], #slideout-ajax-cart, .cart-preview, [data-section-type='availability-drawer'], #cart-dropdown, .cart-drawer, #kaktusc-app, #kaktusc-widget, #rebuy-cart, #added-to-cart, [class*='side-cart-position']";
   useEffect(()=>{
   
     const fetchCartDataNew = async () => {
@@ -28,6 +29,7 @@ const CartDrwer = () => {
         if (response.ok) {
           const data = await response.json();
           console.log(data , "data response");
+          setCartSett(data);
           
         } else {
           console.error('Failed to fetch cart data');
@@ -65,11 +67,15 @@ const CartDrwer = () => {
     fetchCartData();
 
     // Set up a polling interval to fetch cart data every 5 seconds
-    const intervalId = setInterval(fetchCartData, 5000);
+    // const intervalId = setInterval(fetchCartData, 5000);
 
     // Cleanup interval on component unmount
-    return () => clearInterval(intervalId);
+    // return () => clearInterval(intervalId);
   }, []);
+
+
+  console.log(cartsett , "cartsett")
+  console.log(cart , "cart")
 
   return (
     <div>
