@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 const CartDrawer = () => {
   const [cart, setCart] = useState(null);
-
+  
   // Function to fetch cart data using Shopify's cart.js
   const fetchCartData = async () => {
     try {
@@ -20,7 +20,7 @@ const CartDrawer = () => {
   };
 
   // Intercept Shopify AJAX API calls for adding, updating, or removing items
-  const interceptCartActions = () => {
+  const interceptCartActions = (evm_DrawerWrapper) => {
     // Intercept /add.js API call
     const originalAddToCart = window.fetch;
     window.fetch = async function(url, options) {
@@ -47,7 +47,7 @@ console.log(url , "url");
   useEffect(() => {
     const evm_DrawerWrapper = document.querySelector("#evmcartdrawer"); 
     // Call the intercept function to start monitoring Shopify API calls
-    interceptCartActions();
+    interceptCartActions(evm_DrawerWrapper);
     // Initial fetch of the cart data when the component mounts
     fetchCartData();
 
