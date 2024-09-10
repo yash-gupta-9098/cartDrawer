@@ -26,6 +26,7 @@ const CartDrawer = () => {
       const response = await originalAddToCart(url, options);
 
       if (url.includes('cart/add.js') || url.includes('cart/update.js') || url.includes('cart/change.js') || url.includes('cart/clear.js') ) {
+        console.log(`${url} !API call was successful`);
         if (response.ok) {
           console.log(`${url} API call was successful`);
           // Fetch cart data after a successful add/update/remove API call
