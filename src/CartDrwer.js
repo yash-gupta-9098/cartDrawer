@@ -41,7 +41,7 @@ const CartDrawer = () => {
 
       console.log(url, "url");
 
-      if (url.includes('cart/add') || url.includes('cart/change') || url.includes('cart/clear')) {
+      if (url.includes('cart/add') || url.includes('cart/update.js') || url.includes('cart/change') || url.includes('cart/clear')) {
         if (response.ok) {
           debouncedWsDrawerActive()        
           console.log(`${url} API call was successful`);
@@ -54,9 +54,12 @@ const CartDrawer = () => {
     };
   };
 
+  const debounceinterceptCartActions = debounce(interceptCartActions, 1000); 
+   
+
   useEffect(() => {
     // Call the intercept function to start monitoring Shopify API calls
-    interceptCartActions();
+    debounceinterceptCartActions();
     iconClickDrawerOpen();
     // Initial fetch of the cart data when the component mounts
     fetchCartData();
