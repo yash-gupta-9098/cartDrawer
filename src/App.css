@@ -1,7 +1,9 @@
 body.ws_bodyactive{overflow: hidden;}
-div#evmcartdrawer {
-  display: none;
-} 
+
+div#evm-cart-drawer  * {
+  margin: 0;
+}
+
 
 div#evmcartdrawer.active {
   position: fixed;
@@ -21,7 +23,6 @@ div#evmcartdrawer.active {
   height: 100%;
   width: 40rem;
   max-width: calc(100vw - 3rem);
-  padding: 0 1.5rem;
   border: .1rem solid rgba(var(--color-foreground), .2);
   border-right: 0;
   background-color: rgb(var(--color-background));
@@ -29,7 +30,7 @@ div#evmcartdrawer.active {
   display: flex;
   flex-direction: column;
   transform: translate(100%);
-  transition: transform var(--duration-default) ease;
+  transition: transform var(--duration-default) ease;  
 }
 div#evmcartdrawer-Overlay{
   display: block!important;
@@ -45,4 +46,412 @@ div#evmcartdrawer.active .evm-cart-inner {
   transform: translate(0%);
 }
 
+div#evmcartdrawer .ws-drawer-header {
+  border-bottom: 1px solid #0000001a;
+} 
 
+
+div#evmcartdrawer .ws-dr-htop {
+  display: grid;
+  grid-template-columns: 1fr 35px;
+  gap:8px;
+  /* box-shadow: 0 1px #0000001a; */
+  padding: 25px 30px 15px;
+  /* box-shadow: 0 0 5px; */
+  z-index: 1;
+  position: relative;
+}
+
+div#evmcartdrawer button.ws-dr-closebtn {
+  height: 35px;
+  width: 35px;
+  border: 0;
+  background-color: #00000026;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}  
+
+div#evmcartdrawer button.ws-dr-closebtn svg {
+  width: 100%;
+  height: 100%;
+}
+
+
+ul.ws-dr-items {
+  padding: 0;
+  list-style-type: none;
+  overflow-y: auto;
+  flex: 1 0 auto;
+} 
+
+
+li.ws-dr-item {
+  box-shadow: 0 1px #0000001a;
+  padding: 10px 30px;
+  position: relative;
+} 
+.ws-dtl-btn{
+  position: absolute;
+  right: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  background: transparent;
+  border: 0;
+  align-items: center;
+} 
+
+.ws-item-inner {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 10px;
+}
+
+
+.ws-item-content {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  align-items: center;
+}
+
+
+input.ws-item-quantity-count {
+  outline: none;
+  border: 0;
+  width: 25px;
+  text-align: center;
+  background: transparent;
+  -moz-appearance: textfield; /* Firefox */
+  appearance: textfield; /* Chrome, Safari, Edge */
+}
+
+.ws-item-quantity-wrapper {
+  display: flex;
+  background: #eee;
+  width: fit-content;
+}
+
+div#evmcartdrawer .ws-item-title {
+  grid-column: span 2;
+  line-height: 1;
+  font-size: 14px;
+    font-weight: 400;
+}
+
+div#evmcartdrawer .ws-item-unit-price {
+  grid-column: span 1;
+  line-height: 1;
+  font-weight: 500;
+    font-size: 14px;
+    color: #000;
+    align-self: flex-start;
+    padding-top: 5px;
+}
+
+
+.ws-item-variant-wrapper {
+  display: flex;
+  overflow: hidden;
+}
+.ws-item-variant-wrapper:empty {
+  display: flex;
+}
+
+div#evmcartdrawer .ws-item-varinat-title:empty{
+  display:none;
+}
+div#evmcartdrawer .ws-item-varinat-title {
+  grid-column: span 1;
+  background: #eee;
+  border-radius: 4px;
+  font-size: 12px;
+  padding: 4px 10px 5px;
+  text-align: center;
+  white-space: nowrap;
+  font-weight: 500;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  line-clamp: 1;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: auto;
+  line-height: 1;
+}
+
+div#evmcartdrawer .ws-item-total-price-wrapper{
+  display: flex;
+    justify-content: end;
+    justify-self: end;
+}
+
+div#evmcartdrawer .ws-item-quantity-wrapper {
+  justify-self: end;
+
+}
+
+
+
+div#evmcartdrawer .ws-item-quantity-wrapper button {   
+  width: 25px;
+  height: 25px;
+  line-height: 0;
+  background: transparent;
+  border: 0;
+}
+
+div#evmcartdrawer .ws-item-quantity-count::-webkit-inner-spin-button,
+div#evmcartdrawer .ws-item-quantity-count::-webkit-outer-spin-button {
+  -webkit-appearance: none; /* Chrome, Safari */
+  margin: 0; /* Remove default margin */
+}
+
+
+div#evmcartdrawer .ws-loader {
+  height:22px;
+  width:22px;
+  border:3px solid #ddd;
+  border-radius:50%;
+  border-top-color:#333;
+  animation: loaderRotate 1s infinite;
+  justify-self: end;
+}
+
+div#evmcartdrawer .ws-item-total-price {
+  line-height: 1;
+  min-height: 22px;
+  font-weight: 500;
+  color: #000;
+  font-size: 14px;
+} 
+
+
+.ws-cart-empty{
+  height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap:15px;
+}
+.ws-continue-button  {
+  background: #000;
+  color: #fff;  
+  line-height: 1.4;
+  letter-spacing: 1px;
+}
+
+div#evmcartdrawer .ws-drawer-footer {
+  border-top: 1px solid #0000001a;
+} 
+
+div#evmcartdrawer .ws-dr-cartfooter{
+  display: grid;
+  padding: 25px 30px 15px;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  width: 100%;
+gap:10px;
+}
+
+
+div#evmcartdrawer .ws-dr-fcontent {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+} 
+
+
+div#evmcartdrawer .ws-dr-fcartTotal {
+  justify-self: end;
+  font-size: 16px;
+  font-weight: 500;
+  color: #000;
+} 
+
+.ws-dr-fheading{
+font-size:14px;
+font-weight:400;
+}  
+.ws-dr-fbottons {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr 1fr;
+} 
+
+.ws-full-btn {
+  padding: 10px;
+  border: 0;
+  border-radius: 4px;
+  font-size: 16px;
+} 
+
+
+.ws-checkoutcart-button {
+  background: #000;
+  color: #fff;  
+  line-height: 1.4;
+  letter-spacing: 1px;
+}
+
+.ws-dr-ficonsImg {
+
+  object-fit: contain;
+}
+
+
+.ws-viewcart-button {
+  background:transparent;
+    color: #000;
+    border: 1px solid #212121;
+} 
+
+.ws-viewcart-button:hover {
+  background: #eee;
+  border: 1px solid transparent;
+  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  cursor: pointer;
+}
+
+.ws-full-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+
+div#evmcartdrawer button.ws-dr-closebtn:hover svg {
+  transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  animation: loaderRotate 1.6s;
+  cursor: pointer;
+}
+
+
+.ws-dr-adi-items{
+  display: flex;
+    list-style-type: none;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    border-bottom: 1px solid #0000001a;
+    padding: 10px;
+}
+
+.ws-dr-adi-item{
+  padding: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border-radius: 50%;
+  box-shadow: 0 1px 4px 0px #0000002b;
+
+}
+
+.ws-dr-adi-item:hover {
+  cursor: pointer;
+  box-shadow: inset 0 1px 4px 0px #0000002b;
+  transition: box-shadow 1s linear;
+
+}
+
+.ws-dr-adi-item svg {
+  width:25px;
+  height:25px;
+}
+
+.ws-tab-content {
+  padding: 20px;
+  position: fixed;
+  width: inherit;
+  left: inherit;
+  right: inherit;
+  bottom: 0;
+  background-color: #ffffff;
+  width: 100%;
+  -webkit-transform: translateY(104%);
+  transform: translateY(104%);
+  transition: transform .25s ease-in-out;
+  border-top: 1px solid rgba(129, 129, 129, .2);
+  box-shadow: 0 0 10px #81818133;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 10009;
+} 
+
+.ws-tab-content.active {
+  transform: none;
+}
+.ws-tab-content:empty{
+  display:block;
+}
+.ws-cart-note{
+    display: grid;  
+    gap: 15px;
+} 
+.ws-content-heading {
+  line-height: 1;
+  font-size: 14px;
+  font-weight: 700;
+}
+textarea.ws-cart-message {
+  min-height: 100px;
+  color: #000;
+  padding: 8px 10px;
+  width: 100% !important;
+  resize: none;
+  border-radius: 0;
+  outline: none;
+  box-shadow: unset;
+}
+.ws-save-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+  column-gap: 10px;
+}
+
+.ws-save-button , .ws-gift-button{
+    background-color: #f15163;
+    color:#fff;  
+}
+
+.ws-cancel-button {
+  background: #0000;
+    border: 1px solid #212121;
+    color: #000;
+}
+
+.ws-gift {
+  gap: 15px;
+  display: grid;
+} 
+.ws-gift-top {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+}
+
+.ws-gift-top svg {
+  margin: 0 auto !important;
+}
+
+input#wsdiscountcode:focus-visible {
+  outline: none;
+  outline-offset: unset;
+  box-shadow: unset;
+}
+
+
+
+input#wsdiscountcode {
+  padding: 8px 10px;
+}
+
+@keyframes loaderRotate {  
+  100%{
+    rotate: 360deg;    
+  }
+}
