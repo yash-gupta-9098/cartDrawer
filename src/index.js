@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import CartDrwer from './CartDrwer';
+import Popup from './Popup';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -16,6 +17,13 @@ const CartDRwerRoot = ReactDOM.createRoot(document.getElementById('evmcartdrawer
 CartDRwerRoot.render(
   <React.StrictMode>
     <CartDrwer />
+  </React.StrictMode>
+);
+
+const MotionPopRoot = ReactDOM.createRoot(document.getElementById('gesturePopup'));
+MotionPopRoot.render(
+  <React.StrictMode>
+    <Popup />
   </React.StrictMode>
 );
 
