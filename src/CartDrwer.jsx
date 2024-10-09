@@ -4,7 +4,11 @@ import React, { useState, useEffect, useRef } from 'react';
 
 
 const CartDrawer = () => {
+
+
+
   const [cart , setCart] = useState(null);
+  const [wsCartSettings , setWsCartSettings] = useState(null);
   const [note, setNote] = useState(''); 
   const [discountCode, setDiscountCode] = useState(''); 
   const [cartOpen, setCartOpen] = useState(false);
@@ -29,6 +33,12 @@ const CartDrawer = () => {
   }
 
 
+  
+
+
+  
+
+
   useEffect(() => {
     // Function to handle clicks outside of the tab content
     const handleClickOutside = (event) => {
@@ -51,6 +61,7 @@ const CartDrawer = () => {
   // const quantityRef = useRef(null);
   // Function to close the cart drawer
   const cartClose = () => {
+    setCartOpen(false);
     console.log("cart close");
     const evm_DrawerWrapper = document.querySelector("#evmcartdrawer");
     const webbody = document.querySelector("body");
@@ -59,6 +70,9 @@ const CartDrawer = () => {
       webbody.classList.remove("js-drawer-open-right", "js-drawer-open", "ajax-cart__is-open", "js-drawer-open" , "ws_bodyactive" , "overflow-hidden");
     }
   };
+
+  window.cartClose = cartClose;
+
 
   // Function to fetch cart data using Shopify's cart.js
   const fetchCartData = async () => {
@@ -77,11 +91,11 @@ const CartDrawer = () => {
 
 
 
-  useEffect(()=>{    
+  useEffect(()=>{   
     if(cartOpen){
       debouncedWsDrawerActive() 
     }      
-  },[cart , cartOpen])
+  },[cartOpen])
 
 
 
@@ -95,10 +109,13 @@ const CartDrawer = () => {
 
       console.log(url, "url");
 
-      if (url.includes('cart/add') || url.includes('cart/update.js') || url.includes('cart/change') || url.includes('cart/clear')) {
+      if (url.includes('cart/add') || url.includes('cart/change') || url.includes('cart/clear') || url.includes('cart/update.js')) {
         if (response.ok) {
-          setCartOpen(true);
+          if(!url.includes('cart/change')){
+            setCartOpen(true);
+          }          
           console.log(`${url} API call was successful`);
+          document.body.classList.remove("js-drawer-open-right", "js-drawer-open", "ajax-cart__is-open", "js-drawer-open" , "overflow-hidden");
             fetchCartData();
           // Fetch cart data after a successful add/update/remove API call
           
@@ -240,14 +257,45 @@ const CartDrawer = () => {
   }; 
 
 
+  const fetchCartSettingData = async () => {
+    const wsUrl = `${$wsCdBaseUrl}cart_drawer_admin/getCartData?shop=${$storeAddress}`;
+
+    const wsDataSend = new FormData();
+    wsDataSend.append('store_address', $storeAddress);
+    wsDataSend.append('store_version', $wsThmVrsnVal);
+
+    try {
+      const response = await fetch(wsUrl, {
+        method: 'POST',
+        body: {
+          "store_address": window.Shopify.shop,
+          "store_version" : "2.0"
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok ' + response.statusText);
+      }
+
+      const data = await response.json();
+      setWsCartSettings(data); // Set the fetched data in the state
+    } catch (error) {
+      console.error('Error fetching cart data:', error);
+    }
+
+  }
+
 
   useEffect(() => {
-    
+    // fetch cart settings  
+    fetchCartSettingData();
     // Call the intercept function to start monitoring Shopify API calls
     interceptCartActions();
     iconClickDrawerOpen();
     // Initial fetch of the cart data when the component mounts
     fetchCartData();
+    
+    wsDsblAnthrCd();
   }, []);
 
   return (
@@ -262,18 +310,7 @@ const CartDrawer = () => {
                     <span class="ws-dr-count">{cart && cart?.item_count} items</span>
                   </div>
                   <button className='ws-dr-closebtn' onClick={cartClose}>
-                  <svg
-                  width="800px"
-                  height="800px"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"                  
-                >
-                  <path
-                    d="M5.293 5.293a1 1 0 0 1 1.414 0L12 10.586l5.293-5.293a1 1 0 1 1 1.414 1.414L13.414 12l5.293 5.293a1 1 0 0 1-1.414 1.414L12 13.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L10.586 12 5.293 6.707a1 1 0 0 1 0-1.414z"
-                    fill="#0D0D0D"
-                  />
-                </svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 48 48" fill="none"> <path d="M10.5856 10.5862C10.9606 10.2112 11.4692 10.0006 11.9996 10.0006C12.5299 10.0006 13.0385 10.2112 13.4136 10.5862L23.9996 21.1722L34.5856 10.5862C34.7701 10.3951 34.9908 10.2428 35.2348 10.138C35.4788 10.0331 35.7412 9.97797 36.0068 9.97566C36.2723 9.97335 36.5357 10.024 36.7815 10.1245C37.0273 10.2251 37.2506 10.3736 37.4384 10.5614C37.6261 10.7492 37.7747 10.9725 37.8752 11.2183C37.9758 11.464 38.0264 11.7274 38.0241 11.993C38.0218 12.2585 37.9666 12.521 37.8618 12.765C37.757 13.009 37.6046 13.2297 37.4136 13.4142L26.8276 24.0002L37.4136 34.5862C37.7779 34.9634 37.9795 35.4686 37.9749 35.993C37.9704 36.5174 37.76 37.019 37.3892 37.3898C37.0184 37.7606 36.5168 37.971 35.9924 37.9755C35.468 37.9801 34.9628 37.7785 34.5856 37.4142L23.9996 26.8282L13.4136 37.4142C13.0364 37.7785 12.5312 37.9801 12.0068 37.9755C11.4824 37.971 10.9808 37.7606 10.6099 37.3898C10.2391 37.019 10.0288 36.5174 10.0242 35.993C10.0197 35.4686 10.2213 34.9634 10.5856 34.5862L21.1716 24.0002L10.5856 13.4142C10.2106 13.0391 10 12.5305 10 12.0002C10 11.4698 10.2106 10.9612 10.5856 10.5862Z" fill="#0D0D0D"/> </svg>
                   </button>
               </div>
           </div>
@@ -284,16 +321,16 @@ const CartDrawer = () => {
                 <li className="ws-dr-item"  key={item.id}>
                     <div className='ws-item-inner'>
                         <button className="ws-dtl-btn" onClick={()=> updateCartQuantity(item.id , 0)}>
-                                <svg fill="#000000" width="40px" height="40px" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M831.24 280.772c5.657 0 10.24-4.583 10.24-10.24v-83.528c0-5.657-4.583-10.24-10.24-10.24H194.558a10.238 10.238 0 00-10.24 10.24v83.528c0 5.657 4.583 10.24 10.24 10.24H831.24zm0 40.96H194.558c-28.278 0-51.2-22.922-51.2-51.2v-83.528c0-28.278 22.922-51.2 51.2-51.2H831.24c28.278 0 51.2 22.922 51.2 51.2v83.528c0 28.278-22.922 51.2-51.2 51.2z"/><path d="M806.809 304.688l-58.245 666.45c-.544 6.246-6.714 11.9-12.99 11.9H290.226c-6.276 0-12.447-5.654-12.99-11.893L218.99 304.688c-.985-11.268-10.917-19.604-22.185-18.619s-19.604 10.917-18.619 22.185l58.245 666.45c2.385 27.401 26.278 49.294 53.795 49.294h445.348c27.517 0 51.41-21.893 53.796-49.301l58.244-666.443c.985-11.268-7.351-21.201-18.619-22.185s-21.201 7.351-22.185 18.619zM422.02 155.082V51.3c0-5.726 4.601-10.342 10.24-10.342h161.28c5.639 0 10.24 4.617 10.24 10.342v103.782c0 11.311 9.169 20.48 20.48 20.48s20.48-9.169 20.48-20.48V51.3c0-28.316-22.908-51.302-51.2-51.302H432.26c-28.292 0-51.2 22.987-51.2 51.302v103.782c0 11.311 9.169 20.48 20.48 20.48s20.48-9.169 20.48-20.48z"/><path d="M496.004 410.821v460.964c0 11.311 9.169 20.48 20.48 20.48s20.48-9.169 20.48-20.48V410.821c0-11.311-9.169-20.48-20.48-20.48s-20.48 9.169-20.48 20.48zm-192.435 1.767l39.936 460.964c.976 11.269 10.903 19.612 22.171 18.636s19.612-10.903 18.636-22.171l-39.936-460.964c-.976-11.269-10.903-19.612-22.171-18.636s-19.612 10.903-18.636 22.171zm377.856-3.535l-39.936 460.964c-.976 11.269 7.367 21.195 18.636 22.171s21.195-7.367 22.171-18.636l39.936-460.964c.976-11.269-7.367-21.195-18.636-22.171s-21.195 7.367-22.171 18.636z"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 48 48" fill="none"> <path d="M14 8C14 6.93913 14.4214 5.92172 15.1716 5.17157C15.9217 4.42143 16.9391 4 18 4H30C31.0609 4 32.0783 4.42143 32.8284 5.17157C33.5786 5.92172 34 6.93913 34 8V12H42C42.5304 12 43.0391 12.2107 43.4142 12.5858C43.7893 12.9609 44 13.4696 44 14C44 14.5304 43.7893 15.0391 43.4142 15.4142C43.0391 15.7893 42.5304 16 42 16H39.862L38.128 40.284C38.0562 41.2932 37.6046 42.2376 36.8642 42.9271C36.1239 43.6167 35.1497 44 34.138 44H13.86C12.8483 44 11.8741 43.6167 11.1338 42.9271C10.3934 42.2376 9.94183 41.2932 9.87 40.284L8.14 16H6C5.46957 16 4.96086 15.7893 4.58579 15.4142C4.21071 15.0391 4 14.5304 4 14C4 13.4696 4.21071 12.9609 4.58579 12.5858C4.96086 12.2107 5.46957 12 6 12H14V8ZM18 12H30V8H18V12ZM12.148 16L13.862 40H34.14L35.854 16H12.148ZM20 20C20.5304 20 21.0391 20.2107 21.4142 20.5858C21.7893 20.9609 22 21.4696 22 22V34C22 34.5304 21.7893 35.0391 21.4142 35.4142C21.0391 35.7893 20.5304 36 20 36C19.4696 36 18.9609 35.7893 18.5858 35.4142C18.2107 35.0391 18 34.5304 18 34V22C18 21.4696 18.2107 20.9609 18.5858 20.5858C18.9609 20.2107 19.4696 20 20 20ZM28 20C28.5304 20 29.0391 20.2107 29.4142 20.5858C29.7893 20.9609 30 21.4696 30 22V34C30 34.5304 29.7893 35.0391 29.4142 35.4142C29.0391 35.7893 28.5304 36 28 36C27.4696 36 26.9609 35.7893 26.5858 35.4142C26.2107 35.0391 26 34.5304 26 34V22C26 21.4696 26.2107 20.9609 26.5858 20.5858C26.9609 20.2107 27.4696 20 28 20Z" fill="#0D0D0D"/> </svg>
                         </button>
                         <img className='ws-item-image' src={item.featured_image.url} alt={item.featured_image.alt} width={100} height={100}/>
                         <div className="ws-item-content">                             
                               <h4 className='ws-item-title'>{item.title}</h4>
                               <span className='ws-item-unit-price'>{item.presentment_price}</span>                              
                               <div className='ws-item-quantity-wrapper'>
-                                  <button class="decrease" onClick={()=> decreaseValue(item.id)}>-</button>
+                                  <button class="decrease" onClick={()=> decreaseValue(item.id)}><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 48 48" fill="none"> <path d="M8 24C8 23.4696 8.21071 22.9609 8.58579 22.5858C8.96086 22.2107 9.46957 22 10 22H38C38.5304 22 39.0391 22.2107 39.4142 22.5858C39.7893 22.9609 40 23.4696 40 24C40 24.5304 39.7893 25.0391 39.4142 25.4142C39.0391 25.7893 38.5304 26 38 26H10C9.46957 26 8.96086 25.7893 8.58579 25.4142C8.21071 25.0391 8 24.5304 8 24Z" fill="#0D0D0D"/> </svg></button>
                                   <input type="number" readonly className="ws-item-quantity-count" name="quantity" max={item.quantity_rule?.max} min={item.quantity_rule?.min} value={item.quantity} />
-                                  <button class="increase" onClick={()=>increaseValue(item.id)}>+</button>
+                                  <button class="increase" onClick={()=>increaseValue(item.id)}><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 48 48" fill="none"> <path d="M24 8C24.5304 8 25.0391 8.21071 25.4142 8.58579C25.7893 8.96086 26 9.46957 26 10V22H38C38.5304 22 39.0391 22.2107 39.4142 22.5858C39.7893 22.9609 40 23.4696 40 24C40 24.5304 39.7893 25.0391 39.4142 25.4142C39.0391 25.7893 38.5304 26 38 26H26V38C26 38.5304 25.7893 39.0391 25.4142 39.4142C25.0391 39.7893 24.5304 40 24 40C23.4696 40 22.9609 39.7893 22.5858 39.4142C22.2107 39.0391 22 38.5304 22 38V26H10C9.46957 26 8.96086 25.7893 8.58579 25.4142C8.21071 25.0391 8 24.5304 8 24C8 23.4696 8.21071 22.9609 8.58579 22.5858C8.96086 22.2107 9.46957 22 10 22H22V10C22 9.46957 22.2107 8.96086 22.5858 8.58579C22.9609 8.21071 23.4696 8 24 8Z" fill="#0D0D0D"/> </svg></button>
                               </div>
                               <div className='ws-item-variant-wrapper'>
                                 <span className='ws-item-varinat-title'>{item.variant_title}</span>
@@ -329,10 +366,10 @@ const CartDrawer = () => {
           <div className="ws-drawer-footer">
                 <div className="ws-dr-ftoplist">
                         <ul className='ws-dr-adi-items'>
-                          <li className='ws-dr-adi-item' data-id="note" onClick={() => handleTabClick('note')}><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"> <path d="M 16 2 C 14.74 2 13.850156 2.89 13.410156 4 L 5 4 L 5 29 L 27 29 L 27 4 L 18.589844 4 C 18.149844 2.89 17.26 2 16 2 z M 16 4 C 16.55 4 17 4.45 17 5 L 17 6 L 20 6 L 20 8 L 12 8 L 12 6 L 15 6 L 15 5 C 15 4.45 15.45 4 16 4 z M 7 6 L 10 6 L 10 10 L 22 10 L 22 6 L 25 6 L 25 27 L 7 27 L 7 6 z M 9 13 L 9 15 L 11 15 L 11 13 L 9 13 z M 13 13 L 13 15 L 23 15 L 23 13 L 13 13 z M 9 17 L 9 19 L 11 19 L 11 17 L 9 17 z M 13 17 L 13 19 L 23 19 L 23 17 L 13 17 z M 9 21 L 9 23 L 11 23 L 11 21 L 9 21 z M 13 21 L 13 23 L 23 23 L 23 21 L 13 21 z" /> </svg></li>
+                          <li className='ws-dr-adi-item' data-id="note" onClick={() => handleTabClick('note')}><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48" fill="none"> <path d="M18 23C18.5304 23 19.0391 22.7893 19.4142 22.4142C19.7893 22.0391 20 21.5304 20 21C20 20.4696 19.7893 19.9609 19.4142 19.5858C19.0391 19.2107 18.5304 19 18 19C17.4696 19 16.9609 19.2107 16.5858 19.5858C16.2107 19.9609 16 20.4696 16 21C16 21.5304 16.2107 22.0391 16.5858 22.4142C16.9609 22.7893 17.4696 23 18 23ZM22 21C22 20.4696 22.2107 19.9609 22.5858 19.5858C22.9609 19.2107 23.4696 19 24 19H30C30.5304 19 31.0391 19.2107 31.4142 19.5858C31.7893 19.9609 32 20.4696 32 21C32 21.5304 31.7893 22.0391 31.4142 22.4142C31.0391 22.7893 30.5304 23 30 23H24C23.4696 23 22.9609 22.7893 22.5858 22.4142C22.2107 22.0391 22 21.5304 22 21ZM24 25C23.4696 25 22.9609 25.2107 22.5858 25.5858C22.2107 25.9609 22 26.4696 22 27C22 27.5304 22.2107 28.0391 22.5858 28.4142C22.9609 28.7893 23.4696 29 24 29H30C30.5304 29 31.0391 28.7893 31.4142 28.4142C31.7893 28.0391 32 27.5304 32 27C32 26.4696 31.7893 25.9609 31.4142 25.5858C31.0391 25.2107 30.5304 25 30 25H24ZM24 31C23.4696 31 22.9609 31.2107 22.5858 31.5858C22.2107 31.9609 22 32.4696 22 33C22 33.5304 22.2107 34.0391 22.5858 34.4142C22.9609 34.7893 23.4696 35 24 35H30C30.5304 35 31.0391 34.7893 31.4142 34.4142C31.7893 34.0391 32 33.5304 32 33C32 32.4696 31.7893 31.9609 31.4142 31.5858C31.0391 31.2107 30.5304 31 30 31H24ZM20 27C20 27.5304 19.7893 28.0391 19.4142 28.4142C19.0391 28.7893 18.5304 29 18 29C17.4696 29 16.9609 28.7893 16.5858 28.4142C16.2107 28.0391 16 27.5304 16 27C16 26.4696 16.2107 25.9609 16.5858 25.5858C16.9609 25.2107 17.4696 25 18 25C18.5304 25 19.0391 25.2107 19.4142 25.5858C19.7893 25.9609 20 26.4696 20 27ZM18 35C18.5304 35 19.0391 34.7893 19.4142 34.4142C19.7893 34.0391 20 33.5304 20 33C20 32.4696 19.7893 31.9609 19.4142 31.5858C19.0391 31.2107 18.5304 31 18 31C17.4696 31 16.9609 31.2107 16.5858 31.5858C16.2107 31.9609 16 32.4696 16 33C16 33.5304 16.2107 34.0391 16.5858 34.4142C16.9609 34.7893 17.4696 35 18 35Z" fill="#0D0D0D"/> <path d="M18 4C17.4696 4 16.9609 4.21071 16.5858 4.58579C16.2107 4.96086 16 5.46957 16 6H12C10.9391 6 9.92172 6.42143 9.17157 7.17157C8.42143 7.92172 8 8.93913 8 10V40C8 41.0609 8.42143 42.0783 9.17157 42.8284C9.92172 43.5786 10.9391 44 12 44H36C37.0609 44 38.0783 43.5786 38.8284 42.8284C39.5786 42.0783 40 41.0609 40 40V10C40 8.93913 39.5786 7.92172 38.8284 7.17157C38.0783 6.42143 37.0609 6 36 6H32C32 5.46957 31.7893 4.96086 31.4142 4.58579C31.0391 4.21071 30.5304 4 30 4H18ZM32 10H36V40H12V10H16V12C16 12.5304 16.2107 13.0391 16.5858 13.4142C16.9609 13.7893 17.4696 14 18 14H30C30.5304 14 31.0391 13.7893 31.4142 13.4142C31.7893 13.0391 32 12.5304 32 12V10ZM20 10V8H28V10H20Z" fill="#0D0D0D"/> </svg><span className='ws-dr-adi-item-text'>Add Note</span></li>
                           <li style={{display: "none"}} className='ws-dr-adi-item' data-id="gift"  onClick={() => handleTabClick('gift')} ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"> <path d="M 12 5 C 10.355469 5 9 6.355469 9 8 C 9 8.351563 9.074219 8.683594 9.1875 9 L 4 9 L 4 15 L 5 15 L 5 28 L 27 28 L 27 15 L 28 15 L 28 9 L 22.8125 9 C 22.925781 8.683594 23 8.351563 23 8 C 23 6.355469 21.644531 5 20 5 C 18.25 5 17.0625 6.328125 16.28125 7.4375 C 16.175781 7.585938 16.09375 7.730469 16 7.875 C 15.90625 7.730469 15.824219 7.585938 15.71875 7.4375 C 14.9375 6.328125 13.75 5 12 5 Z M 12 7 C 12.625 7 13.4375 7.671875 14.0625 8.5625 C 14.214844 8.78125 14.191406 8.792969 14.3125 9 L 12 9 C 11.433594 9 11 8.566406 11 8 C 11 7.433594 11.433594 7 12 7 Z M 20 7 C 20.566406 7 21 7.433594 21 8 C 21 8.566406 20.566406 9 20 9 L 17.6875 9 C 17.808594 8.792969 17.785156 8.78125 17.9375 8.5625 C 18.5625 7.671875 19.375 7 20 7 Z M 6 11 L 26 11 L 26 13 L 17 13 L 17 12 L 15 12 L 15 13 L 6 13 Z M 7 15 L 25 15 L 25 26 L 17 26 L 17 16 L 15 16 L 15 26 L 7 26 Z" /> </svg></li>
                           <li style={{display: "none"}} className='ws-dr-adi-item' data-id="shippingrates" onClick={() => handleTabClick('shippingrates')}><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"> <path d="M 1 4 L 1 25 L 4.15625 25 C 4.601563 26.71875 6.148438 28 8 28 C 9.851563 28 11.398438 26.71875 11.84375 25 L 20.15625 25 C 20.601563 26.71875 22.148438 28 24 28 C 25.851563 28 27.398438 26.71875 27.84375 25 L 31 25 L 31 14.59375 L 30.71875 14.28125 L 24.71875 8.28125 L 24.40625 8 L 19 8 L 19 4 Z M 3 6 L 17 6 L 17 23 L 11.84375 23 C 11.398438 21.28125 9.851563 20 8 20 C 6.148438 20 4.601563 21.28125 4.15625 23 L 3 23 Z M 19 10 L 23.5625 10 L 29 15.4375 L 29 23 L 27.84375 23 C 27.398438 21.28125 25.851563 20 24 20 C 22.148438 20 20.601563 21.28125 20.15625 23 L 19 23 Z M 8 22 C 9.117188 22 10 22.882813 10 24 C 10 25.117188 9.117188 26 8 26 C 6.882813 26 6 25.117188 6 24 C 6 22.882813 6.882813 22 8 22 Z M 24 22 C 25.117188 22 26 22.882813 26 24 C 26 25.117188 25.117188 26 24 26 C 22.882813 26 22 25.117188 22 24 C 22 22.882813 22.882813 22 24 22 Z" /> </svg></li>
-                          <li className='ws-dr-adi-item' data-id="discount" onClick={() => handleTabClick('discount')} ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" > <path d="M 16 5 L 15.6875 5.28125 L 4.28125 16.8125 L 3.59375 17.5 L 4.28125 18.21875 L 13.78125 27.71875 L 14.5 28.40625 L 15.1875 27.71875 L 26.71875 16.3125 L 27 16 L 27 5 Z M 16.84375 7 L 25 7 L 25 15.15625 L 14.5 25.59375 L 6.40625 17.5 Z M 22 9 C 21.449219 9 21 9.449219 21 10 C 21 10.550781 21.449219 11 22 11 C 22.550781 11 23 10.550781 23 10 C 23 9.449219 22.550781 9 22 9 Z" /> </svg></li>
+                          <li className='ws-dr-adi-item' data-id="discount" onClick={() => handleTabClick('discount')} ><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48" fill="none"> <path d="M4 6C4 5.46957 4.21071 4.96086 4.58579 4.58579C4.96086 4.21071 5.46957 4 6 4H22C22.5304 4.00011 23.039 4.2109 23.414 4.586L43.414 24.586C43.7889 24.9611 43.9996 25.4697 43.9996 26C43.9996 26.5303 43.7889 27.0389 43.414 27.414L27.414 43.414C27.0389 43.7889 26.5303 43.9996 26 43.9996C25.4697 43.9996 24.9611 43.7889 24.586 43.414L4.586 23.414C4.2109 23.039 4.00011 22.5304 4 22V6ZM8 8V21.172L26 39.172L39.172 26L21.172 8H8Z" fill="#0D0D0D"/> <path d="M18 15C18 15.7956 17.6839 16.5587 17.1213 17.1213C16.5587 17.6839 15.7956 18 15 18C14.2044 18 13.4413 17.6839 12.8787 17.1213C12.3161 16.5587 12 15.7956 12 15C12 14.2044 12.3161 13.4413 12.8787 12.8787C13.4413 12.3161 14.2044 12 15 12C15.7956 12 16.5587 12.3161 17.1213 12.8787C17.6839 13.4413 18 14.2044 18 15Z" fill="#0D0D0D"/> </svg> <span className='ws-dr-adi-item-text'>Add Coupon</span></li>
                         </ul>
                 </div>
                 <div className="ws-dr-cartfooter">                  
@@ -474,23 +511,26 @@ const debounce = (func, delay) => {
 
 
 
-const wsDrawerActive  = () =>{
+const wsDrawerActive  = async() =>{
+  
   console.log("darwer active")
   const evm_DrawerWrapper = document.querySelector("#evmcartdrawer");          
   const webbody = document.querySelector("body");
   if (evm_DrawerWrapper) {
     if (!evm_DrawerWrapper.classList.contains('active')) {
       // Add the 'active' class if not already present
-      evm_DrawerWrapper.classList.add('active');
-      webbody.classList.add('ws_bodyactive');
+      evm_DrawerWrapper.classList.add('active');      
       // disabled default drawer 
-      wsDsblAnthrCd();
+      webbody.classList.add('ws_bodyactive');
+      
     } else {
       console.log('The drawer already has the "active" class');
     }
   }
 
 }
+
+window.wsDrawerActive = wsDrawerActive;
 
 const debouncedWsDrawerActive = debounce(wsDrawerActive, 300); 
 

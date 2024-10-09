@@ -5,7 +5,7 @@ div#evm-cart-drawer  * {
 }
 
 
-div#evmcartdrawer.active {
+div#evmcartdrawer{
   position: fixed;
   z-index: 1000;
   left: 0;
@@ -17,8 +17,11 @@ div#evmcartdrawer.active {
   background-color: rgba(var(--color-foreground), .5);
   transition: visibility var(--duration-default) ease;
   display: block;
+  visibility: hidden;
 }
-
+div#evmcartdrawer.active {
+  visibility: visible;
+}
 .evm-cart-inner {
   height: 100%;
   width: 40rem;
@@ -63,13 +66,14 @@ div#evmcartdrawer .ws-dr-htop {
 }
 
 div#evmcartdrawer button.ws-dr-closebtn {
-  height: 35px;
-  width: 35px;
+  height: 30px;
+  width: 30px;
   border: 0;
-  background-color: #00000026;
+  background-color: #eee;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0 6px;
 }  
 
 div#evmcartdrawer button.ws-dr-closebtn svg {
@@ -82,9 +86,23 @@ ul.ws-dr-items {
   padding: 0;
   list-style-type: none;
   overflow-y: auto;
-  flex: 1 0 auto;
+  flex: 1 1 auto;
+  margin-right: 2px !important;
 } 
+ul.ws-dr-items::-webkit-scrollbar {
+  width: 5px;
+}
 
+ul.ws-dr-items::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+ 
+}
+
+ul.ws-dr-items::-webkit-scrollbar-thumb {
+  background-color: #c1c1c1;
+  border-radius: 5px;
+
+}
 
 li.ws-dr-item {
   box-shadow: 0 1px #0000001a;
@@ -100,8 +118,11 @@ li.ws-dr-item {
   background: transparent;
   border: 0;
   align-items: center;
+  padding: 0 6px;
 } 
-
+.ws-dtl-btn:hover {
+cursor: pointer;
+}
 .ws-item-inner {
   display: grid;
   grid-template-columns: 100px 1fr;
@@ -199,8 +220,11 @@ div#evmcartdrawer .ws-item-quantity-wrapper button {
   line-height: 0;
   background: transparent;
   border: 0;
+  padding:0 6px;
 }
-
+div#evmcartdrawer .ws-item-quantity-wrapper button:hover{
+  cursor: pointer;
+}
 div#evmcartdrawer .ws-item-quantity-count::-webkit-inner-spin-button,
 div#evmcartdrawer .ws-item-quantity-count::-webkit-outer-spin-button {
   -webkit-appearance: none; /* Chrome, Safari */
@@ -269,6 +293,8 @@ div#evmcartdrawer .ws-dr-fcartTotal {
   font-size: 16px;
   font-weight: 500;
   color: #000;
+  line-height:1;
+  min-height: 22px;
 } 
 
 .ws-dr-fheading{
@@ -343,10 +369,11 @@ div#evmcartdrawer button.ws-dr-closebtn:hover svg {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: transparent;
-  border-radius: 50%;
+  background: #fff;
+  border-radius:2px;
   box-shadow: 0 1px 4px 0px #0000002b;
-
+  gap: 5px;
+  font-size: 14px;
 }
 
 .ws-dr-adi-item:hover {
@@ -357,8 +384,8 @@ div#evmcartdrawer button.ws-dr-closebtn:hover svg {
 }
 
 .ws-dr-adi-item svg {
-  width:25px;
-  height:25px;
+  width:20px;
+  height:20px;
 }
 
 .ws-tab-content {
